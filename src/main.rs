@@ -17,9 +17,9 @@ struct Args {
         short,
         long,
         default_value_t = 0.5,
-        help = "decrease chance by chance * argument per split"
+        help = "compounded chance of continuing to split"
         )]
-    decrement: f32,
+    chance: f32,
     #[arg(
         long,
         default_value_t = 5,
@@ -57,13 +57,13 @@ fn split<T: Rng>(mut in_file: RgbImage, chance: f32, args: &Args, rng: &mut T) -
         let w_split_at = rng.random::<u32>() % width;
         let first = split(
             image::imageops::crop_imm(&in_file, 0, 0, w_split_at, height).to_image(),
-            chance * args.decrement,
+            chance * args.chance,
             args,
             rng,
         );
         let second = split(
             image::imageops::crop_imm(&in_file, w_split_at, 0, width - w_split_at, height).to_image(),
-            chance * args.decrement,
+            chance * args.chance,
             args,
             rng,
         );
@@ -77,13 +77,13 @@ fn split<T: Rng>(mut in_file: RgbImage, chance: f32, args: &Args, rng: &mut T) -
         let h_split_at = rng.random::<u32>() % height;
         let first = split(
             image::imageops::crop_imm(&in_file, 0, 0, width, h_split_at).to_image(),
-            chance * args.decrement,
+            chance * args.chance,
             args,
             rng,
         );
         let second = split(
             image::imageops::crop_imm(&in_file, 0, h_split_at, width, height - h_split_at).to_image(),
-            chance * args.decrement,
+            chance * args.chance,
             args,
             rng,
         );
